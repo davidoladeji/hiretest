@@ -59,11 +59,12 @@ function sendEmail($success, $message)
 try {
     $signature = $_SERVER['HTTP_X_GITHUB_EVENT'];
 
+    if (is_null($signature) || $signature != 'ping') {
     if (is_null($signature) || $signature != 'push') {
         header('HTTP/1.0 400 Bad Request');
         die('go away');
     }
-
+}
     $payload = file_get_contents('php://input');
 
     // get the signature out of the headers and split it into parts
@@ -119,7 +120,7 @@ try {
     // run the commands
     $output = '';
     $endSentinel = "!~@#_DONE_#@~!";
-    fwrite($shell, 'cd ~/public_html' . "\n");
+    fwrite($shell, 'cd ~/hirelancer' . "\n");
     fwrite($shell, 'git pull' . "\n");
     fwrite($shell, 'echo ' . escapeshellarg($endSentinel) . "\n");
     while (true) {
